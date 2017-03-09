@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<link rel="stylesheet" href="css/materialize.css" />
+		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+		<link rel="stylesheet" href="css/croppic.css" />
+		<script type="text/javascript" src="js/jquery-1.8.2.js"></script>
+		<script type="text/javascript" src="js/materialize.js"></script>
+		<script type="text/javascript" src="js/croppic.js" ></script>
+		<link rel="stylesheet" href="css/style.css" />
+		<script>
+			$(document).ready(function() {
+				$(".button-collapse").sideNav();
+				$('ul.tabs').tabs();
+				$('.materialboxed').materialbox();
+				$('.tooltipped').tooltip({
+					delay: 50
+				});
+				$('#modal1').modal({
+					dismissible: false, // Modal can be dismissed by clicking outside of the modal
+					opacity: .5, // Opacity of modal background
+					inDuration: 300, // Transition in duration
+					outDuration: 200, // Transition out duration
+					startingTop: '4%', // Starting top style attribute
+					endingTop: '10%', // Ending top style attribute
+					ready: function(modal, trigger) { // Callback for Modal open. Modal and trigger parameters available.
+						console.log(modal, trigger);
+					},
+					complete: function() {} // Callback for Modal close
+				});
+				var cropperHeader = new Croppic('img-loader');
+			});
+		</script>
+		<style>
+			.nav-wrapper a {
+				color: black;
+			}
+			
+			.container {
+				width: 86%;
+				margin-top: 20px;
+			}
+			
+			.tabs {
+				margin-bottom: 20px;
+			}
+			
+			.btn-group {
+				margin-bottom: 20px;
+			}
+			
+			.btn-group .btn {
+				margin-right: 1em;
+			}
+			
+			.search {
+				display: block;
+				font-size: 16px;
+				font-weight: 300;
+				width: 300px;
+				height: 45px;
+				margin: 0;
+				padding: 0 45px 0 15px;
+				border: 0;
+			}
+			
+			.search input {
+				padding-left: 25px;
+			}
+			
+			.search i {
+				position: absolute;
+				top: 10px;
+				left: 14px;
+				cursor: pointer;
+			}
+			
+			.product-table tr td {
+				min-height: 200px;
+			}
+			
+			.product-table td:nth-of-type(1),
+			.product-table th:nth-of-type(1) {
+				width: 50px;
+				text-align: center;
+			}
+			
+			.product-table td:nth-of-type(2),
+			.product-table th:nth-of-type(2) {
+				width: 10%;
+				max-width: 200px;
+			}
+			
+			.product-table td:nth-last-of-type(1),
+			.product-table th:nth-last-of-type(1) {
+				width: 100px;
+				text-align: center;
+			}
+			
+			.product-table td:nth-last-of-type(2),
+			.product-table th:nth-last-of-type(2),
+			.product-table td:nth-last-of-type(3),
+			.product-table th:nth-last-of-type(3),
+			.product-table td:nth-last-of-type(4),
+			.product-table th:nth-last-of-type(4) {
+				width: 100px;
+				text-align: center;
+			}
+			
+			.table-img {
+				width: 100%;
+			}
+			
+			.option-icon i {
+				cursor: pointer;
+			}
+			#img-loader
+			{
+				width: 200px;
+				height: 200px;
+				position: relative;
+				box-sizing: content-box;
+				-moz-box-sizing: content-box;
+				border-radius: 2px;
+				border: 1px solid gainsboro;
+				background-image:url(img/placeholder.png);
+				background-repeat: no-repeat;
+				background-position: center;
+			}
+		</style>
+		<title></title>
+	</head>
+
+	<body>
+		<nav>
+			<div class="nav-wrapper grey lighten-3">
+				<a href="#" class="brand-logo center ">师太的代购小店</a>
+				<a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
+				<ul id="nav-mobile" class="left hide-on-med-and-down">
+					<li>
+						<a href="sass.html"><i class="material-icons left">store</i>商品管理</a>
+					</li>
+					<li>
+						<a href="badges.html"><i class="material-icons left">assignment</i>订单管理</a>
+					</li>
+					<li>
+						<a href="collapsible.html"><i class="material-icons left">assessment</i>数据统计</a>
+					</li>
+				</ul>
+				<ul class="side-nav" id="mobile-demo">
+					<li>
+						<a href="sass.html"><i class="material-icons left">store</i>商品管理</a>
+					</li>
+					<li>
+						<a href="badges.html"><i class="material-icons left">assignment</i>订单管理</a>
+					</li>
+					<li>
+						<a href="collapsible.html"><i class="material-icons left">assessment</i>数据统计</a>
+					</li>
+				</ul>
+			</div>
+		</nav>
+		<div class="container">
+			<div class="row">
+				<div class="z-depth-1">
+					<ul class="tabs">
+						<li class="tab col s2">
+							<a class="active" href="#tab1">所有商品</a>
+						</li>
+						<li class="tab col s2">
+							<a href="#tab2">优惠信息</a>
+						</li>
+					</ul>
+				</div>
+				<div id="tab1" class="col s12">
+					<div class="btn-group">
+						<a class="btn-floating waves-effect waves-light red btn" href="#modal1"><i class="material-icons">add</i>button</a>
+						<div id="modal1" class="modal">
+							<div class="modal-content">
+								<h4>添加新的商品</h4>
+								<form action="#">
+									<div id="img-loader"></div>
+									   <div class="input-field col s6">
+                                       <input placeholder="Placeholder" id="first_name" type="text" class="validate">
+                                       <label for="first_name">First Name</label>
+                                    </div>
+								</form>
+							</div>
+							<div class="modal-footer">
+								<a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Agree</a>
+							</div>
+						</div>
+						<a class="waves-effect waves-light btn"><i class="material-icons right">delete</i>删除</a>
+						<div class="search card right"><i class="material-icons">search</i><input id="search card"></div>
+					</div>
+					<table class="striped product-table card">
+						<thead>
+							<tr>
+								<th data-field="id">
+									<input type="checkbox" class="filled-in" id="filled-in-box-all" />
+									<label for="filled-in-box-all"></label></th>
+								<th data-field="name"></th>
+								<th data-field="price">商品名</th>
+								<th>描述</th>
+								<th>价格</th>
+								<th>折扣</th>
+								<th>库存</th>
+								<th>操作</th>
+							</tr>
+						</thead>
+
+						<tbody>
+							<tr>
+								<td><input type="checkbox" class="filled-in" id="filled-in-box-1" />
+									<label for="filled-in-box-1"></label></th>
+								</td>
+								<td> <img class="materialboxed table-img" src="img/QQ图片20170223164836.jpg"></td>
+								<td>$0.87</td>
+								<td>$0.87</td>
+								<td>$0.87</td>
+								<td>$0.87</td>
+								<td>$0.87</td>
+								<td>
+									<a class="tooltipped option-icon" data-position="top" data-tooltip="查看网站"><i class="material-icons">language</i></a>
+									<a class="tooltipped option-icon" data-position="top" data-tooltip="编辑"><i class="material-icons">mode_edit</i></a>
+									<a class="tooltipped option-icon" data-position="top" data-tooltip="删除"><i class="material-icons">delete</i></a>
+								</td>
+							</tr>
+							<tr>
+								<td><input type="checkbox" class="filled-in" id="filled-in-box-2" />
+									<label for="filled-in-box-2"></label></th>
+								</td>
+								<td><img class="materialboxed table-img" src="img/QQ图片20170223171821.jpg"></td>
+								<td>$3.76</td>
+								<td>$0.87</td>
+								<td>$0.87</td>
+								<td>$0.87</td>
+								<td>$0.87</td>
+								<td>
+									<a class="tooltipped option-icon" data-position="top" data-tooltip="查看网站"><i class="material-icons">language</i></a>
+									<a class="tooltipped option-icon" data-position="top" data-tooltip="编辑"><i class="material-icons">mode_edit</i></a>
+									<a class="tooltipped option-icon" data-position="top" data-tooltip="删除"><i class="material-icons">delete</i></a>
+								</td>
+							</tr>
+							<tr>
+								<td><input type="checkbox" class="filled-in" id="filled-in-box-3" />
+									<label for="filled-in-box-3"></label></th>
+								</td>
+								<td><img class="materialboxed table-img" src="img/QQ图片20170223173138.jpg"></td>
+								<td>$7.00</td>
+								<td>$0.87</td>
+								<td>$0.87</td>
+								<td>$0.87</td>
+								<td>$0.87</td>
+								<td>
+									<a class="tooltipped option-icon" data-position="top" data-tooltip="查看网站"><i class="material-icons">language</i></a>
+									<a class="tooltipped option-icon" data-position="top" data-tooltip="编辑"><i class="material-icons">mode_edit</i></a>
+									<a class="tooltipped option-icon" data-position="top" data-tooltip="删除"><i class="material-icons">delete</i></a>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					<div id="tab2" class="col s12">Test 2</div>
+				</div>
+			</div>
+	</body>
+
+</html>

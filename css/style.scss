@@ -1,0 +1,132 @@
+a{
+    text-decoration: none;
+}
+body,html{
+    width: 100%;
+    height: 100%;
+}
+
+.white {
+    color: white;
+}
+.grey{
+    color: #5d5b5b;
+}
+.orange{
+    color: orange;
+}
+.black{
+    color: black;
+}
+.red{
+    color: red;
+}
+.subheader {
+    margin-top: 50px;
+    width: 100%;
+    height: auto;
+    .subH5 {
+        color: grey;
+    }
+}
+.busstatus {
+    border-radius: 10px;
+    padding: 5px 0;
+    margin: 0 auto;
+    text-align: center;
+    width: 80px;
+    height: auto;
+    font-size: 25px;
+    position: relative;
+}
+.movebus{
+    min-width: 100%;
+    width: 433px;
+    margin: 20px 0 0 0;
+    height: 30px;
+    font-size: 20px;
+    border-bottom: solid 5px red;
+    position: relative;
+//  visibility: hidden;
+//小车
+.busicon{
+    visibility: hidden;
+}
+}
+.stopline{
+    width: 450px;
+    position: relative;
+    margin-top: -12px;
+    font-size: 15px;
+    text-align: center;
+    margin-left: -10px;
+    z-index: 10;
+    visibility: hidden;
+    span{
+        display: inline-block;
+        width: 48px;
+        padding: 0;
+        background-color: transparent;
+//      margin-left: -0.5px;
+    }
+     .first{
+        margin-left: 10px;
+    }
+}
+.listbar {
+    z-index: -1;
+    margin-top: -3px;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    width: 433px;
+    height: 70%;
+    min-height: 400px;
+    .detaillist {
+        height: 100%;
+        .item {
+            border: none;
+            border-right: solid 1px #C0C0C0; 
+            border-left: solid 1px #C0C0C0;
+            height: 600px;
+            text-align: center;
+            width: 50px;
+            float: left;
+        }
+             h2 {
+            font-size: 18px;
+        }
+    }
+}
+.bottomlist {
+    overflow: hidden;
+    width: 100%;
+    .item {
+        float: left;
+        border: none;
+        margin: -15px 0 0;
+    }
+    span {
+        font-size: 20px;
+        display: inline-block;
+        margin-top: -2px;
+    }
+    .bottomitem {
+        text-align: center;
+        width: 20%;
+        padding-left: 0;
+        padding-right: 0;
+    }
+}
+.tab-item .icon{
+    font-size: 25px;
+    padding-top: 2px;
+    height: 30px;
+}
+
+
+//地图页
+#container{
+    width: 100%;
+    height: 100%;
+}
+

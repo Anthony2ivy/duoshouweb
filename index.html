@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+		<title></title>
+		<link rel="manifest" href="manifest.json">
+
+		<!-- un-comment this code to enable service worker
+    <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('service-worker.js')
+          .then(() => console.log('service worker installed'))
+          .catch(err => console.log('Error', err));
+      }
+    </script>-->
+
+		<link href="lib/ionic/css/ionic.css" rel="stylesheet">
+		<link href="css/style.css" rel="stylesheet">
+		<!-- IF using Sass (run gulp sass first), then uncomment below and remove the CSS includes above
+    <link href="css/ionic.app.css" rel="stylesheet">
+    -->
+
+		<!-- ionic/angularjs js -->
+		<script src="lib/ionic/js/ionic.bundle.js"></script>
+
+		<!-- cordova script (this will be a 404 during development) -->
+		<script src="cordova.js"></script>
+
+		<!-- your app's js -->
+		<script src="js/app.js"></script>
+
+		<!-----baidu map-------->
+		<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=oQK4mbMls3Pl6okFBiSGGFoQEpqKSmbs">
+		</script>
+	</head>
+
+	<body ng-app="starter" ng-controller="campusbus">
+
+		<ion-pane>
+			<ion-header-bar class="bar-assertive" align-title='center'>
+				<h1 class="title">校园巴士</h1>
+			</ion-header-bar>
+			<div class="subheader" class="padding-left">
+				<div>
+					<h5>&nbsp;&nbsp;&nbsp;开往: <span ng-bind="direction"></span>方向</h5></div>
+				<div>
+					<h5 class="subH5">&nbsp;&nbsp;&nbsp;服务时间:&nbsp;{{servicetime}}</h5></div>
+				<div ng-click="modal.show()">
+					<h5 class="subH5">&nbsp;&nbsp;&nbsp;详细时刻表&nbsp;<span class="ion-information-circled energized"></span></h5>
+				</div>
+			</div>
+			<div class="busstatus assertive-bg white">
+				<div class="ion-android-bus"></div>
+				<div>
+					<h5 class="white">{{status}}</h5>
+					<h5>{{lat}}</h5>
+					<h5>{{lng}}</h5>
+
+				</div>
+			</div>
+			<!--<div id="container"></div>-->
+			<!--
+            	描述：上面是顶部
+            -->
+			<ion-scroll direction="x">
+				<div class="movebus">
+					<span class="assertive busicon"><img src="img/bus1-red.svg"></span></div>
+				<div class="stopline"><span class="ion-record orange first">
+            	</span><span class="ion-record orange">
+            	</span><span class="ion-record orange">
+            	</span><span class="ion-record orange">
+            	</span><span class="ion-record orange">
+            	</span><span class="ion-record orange">
+            	</span><span class="ion-record orange">
+            	</span><span class="ion-record orange">
+            	</span><span class="ion-record orange">
+			</span></div>
+
+				<div class="listbar ">
+					<ul class="list detaillist">
+						<li class="item detailitem item-text-wrap" ng-repeat="x in stops"><h2 class="grey">{{$index}}</h2><h2 class="grey">{{x.sitename}}</h2><h2></h2></li>
+					</ul>
+				</div>
+
+			</ion-scroll>
+
+			<!---下面就是底部------>
+			<ion-footer-bar class="bar-stable" align-title="center">
+				<!--<ion-tabs class="tabs-stable tabs-icon-top" ng-controller="subheader">
+				<ion-tab title="交换方向" icon-off="ion-arrow-swap calm" icon-on="ion-arrow-swap calm" ></ion-tab>
+				<ion-tab title="刷新数据" icon-off="ion-refresh royal" icon-on="ion-refresh royal" onselect="changeDirection()"></ion-tab>
+				<ion-tab title="浏览地图" icon-off="ion-map positive" icon-on="ion-map positive"></ion-tab>
+				<ion-tab title="意见反馈" icon-off="ion-wrench energized" icon-on="ion-wrench energized"></ion-tab>
+				<ion-tab title="更多路线" icon-off="ion-plus-circled balanced" icon-on="ion-plus-circled balanced"></ion-tab>-->
+
+				<ul class="list bottomlist">
+					<li class="item stable-bg calm bottomitem" ng-click="changeDirection()">
+						<span class="ion-arrow-swap"></span>
+						<h5>交换方向</h5>
+					</li>
+					<li class="item stable-bg royal bottomitem">
+						<span class="ion-refresh"></span>
+						<h5>刷新位置</h5>
+					</li>
+					<li class="item stable-bg positive bottomitem" ng-click="showmap()">
+						<a href="pages/map.html">
+							<span class="ion-map"></span>
+							<h5>浏览地图</h5>
+						</a>
+					</li>
+					<li class="item stable-bg energized bottomitem">
+						<span class="ion-wrench"></span>
+						<h5>意见反馈</h5>
+					</li>
+					<li class="item stable-bg balanced bottomitem">
+						<span class="ion-plus-circled"></span>
+						<h5>更多线路</h5>
+					</li>
+				</ul>
+				<!--</ion-tabs>-->
+
+			</ion-footer-bar>
+		</ion-pane>
+		<script id="templates/modal.html" type="text/ng-template">
+			<div class="modal">
+				<div class="list card">
+					<div class="item assertive-bg" style="text-align: right;">
+						<h2 class="white"><i class="ion-close-circled" ng-click="modal.hide()">&nbsp;收起</i></h2>
+					</div>
+					<div class="item">
+						<h2><span class="ion-flag assertive"></span>慧园站发车时间：</h2>
+						<br />
+						<h3>早高峰: 7:10~7:40(10分钟一趟)</h3>
+						<hr />
+						<h3>上&nbsp;&nbsp;&nbsp;&nbsp;午: 8:15 9:25 9:45 10:00</h3>
+						<hr />
+						<h3>午高峰: 11:35—12:35(15 分钟一趟)</h3>
+						<hr />
+						<h3>下&nbsp;&nbsp;&nbsp;&nbsp;午: 13:20 13:30 13:40 15:20 16:00</h3>
+						<hr />
+						<h3>晚&nbsp;&nbsp;&nbsp;&nbsp;上: 18:30 18:45 21:00</h3>
+						<hr />
+					</div>
+					<div class="item">
+						<h2><span class="ion-flag assertive"></span>图书馆发车时间:</h2>
+						<br />
+						<h3>上&nbsp;&nbsp;&nbsp;&nbsp;午: 8:30 10:20</h3>
+						<hr />
+						<h3>午高峰: 11:35—12:35(15 分钟一趟)</h3>
+						<hr />
+						<h3>下&nbsp;&nbsp;&nbsp;&nbsp;午: 13:25 15:40 16:20 17:30</h3>
+						<hr />
+						<h3>晚&nbsp;&nbsp;&nbsp;&nbsp;上: 21:20 21:55</h3>
+						<hr />
+					</div>
+
+				</div>
+			</div>
+		</script>
+
+	</body>
+
+</html>

@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+		<title>
+		</title>
+		<link rel="manifest" href="../manifest.json">
+		<link rel="stylesheet" href="../css/style.css" />
+		<link rel="stylesheet" href="../lib/ionic/css/ionic.css" />
+		<script type="text/javascript" src="../lib/ionic/js/angular/angular.js"></script>
+		<script src="../lib/ionic/js/ionic.bundle.js"></script>
+		<script src="../cordova.js"></script>
+		<script src="../js/app.js"></script>
+		<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=oQK4mbMls3Pl6okFBiSGGFoQEpqKSmbs">
+		</script>
+		<script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+		 <script type="text/javascript" src="http://api.map.baidu.com/library/Heatmap/2.0/src/Heatmap_min.js"></script>
+		<style>
+			.hot-button {
+				width: 60px;
+				height: 20px;
+				border-radius: 5px;
+				text-align: center;
+				font-family: "微软雅黑";
+				color: skyblue;}
+				
+				.control-panel
+				{
+				margin-left: 10%;
+				position: absolute;
+				left: 30px;
+				top: 20px;
+				z-index: 9999;
+				}
+				.control-panel>*{
+					float: left;
+				}
+				.mycheck
+				{
+					width: 20px;
+					height: 20px;
+					padding-top: 5px;
+				}
+				.time-select{
+					display: none;
+				}
+				.time-select>*
+				{
+					float: left;
+					margin-left: 10px;
+				}
+			
+		</style>
+	</head>
+
+	<body>
+		<ion-view>
+			<ion-content ng-app="mapApp" ng-controller="mapCtrl">
+				<div class="control-panel">
+				<input type="checkbox" id="hot-check" class="mycheck"/>
+				<div class="hot-button" >热力图</div>
+				<div class="time-select">
+				<label class="item item-input" >
+               <span class="input-label">开始时间：</span>
+                <input type="datetime-local" id="fromtime">
+            </label>
+			<label class="item item-input" >
+             <span class="input-label">结束时间：</span>
+               <input type="datetime-local" id="totime">
+              </label>
+              <button class="button button-positive" onclick="refresHeatmap()">
+ 刷新
+</button>
+              </div>
+             </div>
+				<div id="container">
+				</div>
+			</ion-content>
+		</ion-view>
+		<script>
+			var app = angular.module('mapApp', []);
+			var maps = new BMap.Map("container"); // 创建地图实例  
+			//			maps.setCurrentCity("深圳");
+			var point = new BMap.Point(114.007073, 22.603829); // 创建点坐标  
+			maps.centerAndZoom(point, 17);
+			maps.addControl(new BMap.NavigationControl());
+			maps.addControl(new BMap.ScaleControl());
+			maps.addControl(new BMap.OverviewMapControl());
+			maps.addControl(new BMap.MapTypeControl());
+			maps.addControl(new BMap.GeolocationControl());
+			var geolocationControl = new BMap.GeolocationControl();
+			geolocationControl.addEventListener("locationSuccess", function(e) {
+				// 定位成功事件
+			});
+			geolocationControl.addEventListener("locationError", function(e) {
+				// 定位失败事件
+				alert(e.message);
+			});
+			maps.addControl(geolocationControl);
+			//热力图
+			heatmapOverlay = new BMapLib.HeatmapOverlay({"radius":20});
+	        maps.addOverlay(heatmapOverlay);
+	        function openHeatmap(){
+            heatmapOverlay.show();
+            }
+	        function closeHeatmap(){
+            heatmapOverlay.hide();
+            }
+	        closeHeatmap();
+	        function refresHeatmap()
+	        {
+	        	var fromtime=$("#fromtime").val();
+	        	var totime=$("#totime").val();
+	        	var points=[ {"lng":114.004037,"lat":22.605076,"count":50},
+                       {"lng":114.007486,"lat":22.607011,"count":51}];
+                $.ajax({url:"http://app.cse.sustc.edu.cn/route/getLocationRecord",
+                       type:"get",
+                       data:{"fromtime":fromtime,
+                       "totime":totime},
+                      dataType:"json",
+                      success:function(result)
+                      {
+                      	points=result;
+                      	  heatmapOverlay.setDataSet({data:points,max:100});
+                      }
+                       });
+	        }
+			//			var geolocation = new BMap.Geolocation();
+			//			geolocation.getCurrentPosition(function(r) {
+			//				if(this.getStatus() == BMAP_STATUS_SUCCESS) {
+			//					var mk = new BMap.Marker(r.point);
+			//					maps.addOverlay(mk);
+			////					alert(r.point.lat+"  "+r.point.lng);
+			//					maps.panTo(r.point);
+			//				} else {
+			//					alert('failed' + this.getStatus());
+			//				}
+			//			}, {
+			//				enableHighAccuracy: true
+			//			});
+			//			var geolocation = new BMap.Geolocation();
+			//			geolocation.getCurrentPosition(function(r) {
+			//				if(this.getStatus() == BMAP_STATUS_SUCCESS) {
+			//					var mk = new BMap.Marker(r.point);
+			//					maps.addOverlay(mk);
+			//					maps.panTo(r.point);
+			////					alert('您的位置：' + r.point.lng + ',' + r.point.lat);
+			//				} else {
+			//					alert('failed' + this.getStatus());
+			//				}
+			//			}, {
+			//				enableHighAccuracy: true
+			//			});
+
+			function ComplexCustomOverlay(point, className, text) {
+				this._point = point;
+				this.className = className;
+				this._text = text;
+			}
+			ComplexCustomOverlay.prototype = new BMap.Overlay();
+			ComplexCustomOverlay.prototype.setStyle = function(style) {
+				this._div.setStyle(style);
+			}
+			ComplexCustomOverlay.prototype.initialize = function(map) {
+				this._map = map;
+				var div = this._div = document.createElement("div");
+				div.style.height = "20px";
+				div.style.width = "20px";
+				div.style.fontSize = "20px";
+				div.style.position = "absolute";
+				div.className = this.className;
+				div.style.zIndex = BMap.Overlay.getZIndex(this._point.lat);
+				var textdiv = document.createElement("div");
+				textdiv.style.position = "absolute";
+				textdiv.style.width = "100px";
+				textdiv.style.left = "20px";
+				div.appendChild(document.createTextNode(this._text));
+				map.getPanes().labelPane.appendChild(div);
+				return div;
+			}
+			ComplexCustomOverlay.prototype.draw = function() {
+				var map = this._map;
+				var pixel = map.pointToOverlayPixel(this._point);
+				this._div.style.left = (pixel.x - 10) + "px";
+				this._div.style.top = (pixel.y - 10) + "px";
+			}
+			app.controller('mapCtrl', function($scope, $http) {
+				$scope.allBus = [{
+					"busNo": "868120149966688",
+					"longitude": 114.009029,
+					"latitude": 22.60795,
+					"prevSiteNo": 8,
+					"nextSiteNo": 9,
+					"prevSiteIndex": 6,
+					"nextSiteIndex": 7
+				}, {
+					"busNo": "868120149936269",
+					"longitude": 114.010469,
+					"latitude": 22.604065,
+					"prevSiteNo": 6,
+					"nextSiteNo": 5,
+					"prevSiteIndex": 3,
+					"nextSiteIndex": 4
+				}];
+				$scope.routeInfo = {};
+				$scope.allBusOverlay = [];
+				$http.get("http://app.cse.sustc.edu.cn/route/routeInfoById/1")
+					.success(function(response) {
+						$scope.routeInfo = response;
+						$scope.refreshSites();
+					});
+				$scope.refreshSites = function() {
+					var allsite = eval("(" + $scope.routeInfo.route.allsite + ")");
+					var possites = [];
+					var negsites = [];
+					allSiteSize = allsite.length;
+					var count = 0;
+					for(i = 0; i < allSiteSize; i++) {
+						var temp = allsite[i];
+						if(temp.siteno != $scope.routeInfo.route.tositeno) {
+							possites.push(temp);
+						} else {
+							possites.push(temp);
+							count = i;
+							break;
+						}
+					}
+					for(i = count; i < allSiteSize; i++) {
+						var temp = allsite[i];
+						negsites.push(temp);
+					}
+					for(i in $scope.routeInfo.sitesInfo) {
+						var temp = $scope.routeInfo.sitesInfo[i];
+						var point = new BMap.Point(temp.longitude, temp.latitude);
+						var marker = new BMap.Marker(point);
+						var myicon = new BMap.Icon("../img/site.png", new BMap.Size(16, 16));
+						marker.setShadow(new BMap.Icon("../img/site.png", new BMap.Size(0, 0))); // 将标注添加到地图中
+
+						myicon.imageSize = new BMap.Size(16, 16);
+						marker.setIcon(myicon);
+						var label = new BMap.Label(temp.sitename + "", {
+							offset: new BMap.Size(-5, 16)
+						});
+						label.setStyle({
+							color: "rgba(0,0,0,0.7)",
+							fontSize:"20px",
+							border: "none",
+							background: "none",
+							fontWeight: 700,
+							fontFamily:"微软雅黑"
+						});
+						marker.setLabel(label);
+						maps.addOverlay(marker);
+					}
+					//正向站点线
+//					posPoints = [];
+//					for(i in possites) {
+//						posPoints.push(new BMap.Point(possites[i].longitude, possites[i].latitude));
+//					}
+//					var posPolyline = new BMap.Polyline(posPoints, {
+//						strokeColor: "blue",
+//						strokeWeight: 4,
+//						strokeOpacity: 0.6
+//					});
+//					maps.addOverlay(posPolyline);
+					//反向站点线
+									negPoints = [];
+									for(i in negsites) {
+										negPoints.push(new BMap.Point(negsites[i].longitude, negsites[i].latitude));
+									}
+									var negPolyline = new BMap.Polyline(negPoints, {
+										strokeColor: "blue",
+										strokeWeight: 2,
+										strokeOpacity: 0.5
+									});
+									maps.addOverlay(negPolyline);
+				}
+
+				function refreshBus(response) {
+					busSize = $scope.allBusOverlay.length;
+					for(i = 0; i < busSize; i++) {
+						maps.removeOverlay($scope.allBusOverlay[i]);
+					}
+					$scope.allBusOverlay.splice(1, 1);
+					$scope.allBus = response;
+					busSize = $scope.allBus.length;
+					for(i = 0; i < busSize; i++) {
+						temp = $scope.allBus[i];
+						var point = new BMap.Point(temp.longitude, temp.latitude);
+						var marker = new ComplexCustomOverlay(point, "ion-android-bus", "");
+						//						var marker = new ComplexCustomOverlay(point, "ion-android-bus",temp.prevSiteNo+","+temp.nextSiteNo+","+temp.prevSiteIndex+","+temp.nextSiteIndex);
+						$scope.allBusOverlay.push(marker);
+						maps.addOverlay(marker);
+					}
+				}
+				updateBus = function() {
+					$http.get("http://app.cse.sustc.edu.cn/route/findAllBus?routeNo=1")
+						.success(function(response) {
+							refreshBus(response);
+						});
+				}
+				$("#hot-check").change(function(){
+					if($("#hot-check").prop("checked"))
+					{
+						$(".time-select").fadeIn();
+						openHeatmap();
+					}else{
+						$(".time-select").fadeOut();
+						closeHeatmap();
+					}
+				})
+				updateBus();
+				setInterval("updateBus()", 3000);
+				
+			});
+		</script>
+	</body>
+
+</html>
